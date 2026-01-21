@@ -7,7 +7,6 @@
  "route": "ectoplasmic.doco-express.com",
  "env": {
     "dev": {
-      "preview_urls": true,
       "route": "ectoplasmic-dev.doco-express.com",
     }
   }
