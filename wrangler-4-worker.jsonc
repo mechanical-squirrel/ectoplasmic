@@ -1,0 +1,15 @@
+{
+ "name": "ectoplasmic",
+ "compatibility_date": "2026-01-21",
+ "preview_urls": true,
+ "assets": {
+   "directory": "./dist"
+ },
+ "route": "ectoplasmic.doco-express.com",
+ "env": {
+    "dev": {
+      "route": "ectoplasmic-dev.doco-express.com",
+    }
+  }
+
+}
