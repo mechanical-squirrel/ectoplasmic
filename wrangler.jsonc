@@ -1,6 +1,7 @@
 {
  "name": "ectoplasmic",
  "compatibility_date": "2026-01-21",
+ "preview_urls": true,
  "assets": {
    "directory": "./dist"
  },
