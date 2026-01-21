@@ -1,0 +1,436 @@
+
+<!doctype html>
+<html lang="en-US" dir="ltr">
+<head>
+
+  <title>Just fucking use HTML</title>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <meta name="description" content="Looking at you">
+  <meta name="robots" content="index, follow">
+
+  <meta property="og:site_name" content="Just HTML">
+  <meta property="og:title" content="Just HTML">
+  <meta property="og:description" content="Inspired by Just Fucking Use HTML">
+  <meta property="og:image" content="https://ectoplasmic.doco-express.com/assets/images/og.png">
+  <meta property="og:url" content="https://ectoplasmic.doco-express.com">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="en_US">
+
+  <link rel="canonical" href="https://ectoplasmic.doco-express.com">
+  <link rel="icon" type="image/png" href="/assets/images/favicons/favicon-96x96.png" sizes="96x96">
+  <link rel="icon" type="image/svg+xml" href="/assets/images/favicons/favicon.svg">
+  <link rel="shortcut icon" href="/assets/images/favicons/favicon.ico">
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/favicons/apple-touch-icon.png">
+
+</head>
+<body>
+
+
+<header>
+  <h1>Just some stuff</h1>
+  <p>
+    For quick access to my notes.
+  </p>
+
+  <p>
+   And to test native HTML features.
+  </p>
+</header>
+
+<section>
+  <h2>Shell commands</h2>
+
+  <h3> == curl ==</h3>
+  <p>Rewrite origin</p>  
+  <textarea rows="2" cols="100" readonly>
+curl -v -H "Host: ectoplasmic.doco-express.com" -k https://13.107.246.31
+  </textarea>  
+  <p> Client TLS authentication </p>
+<textarea rows="2" cols="100" readonly>
+curl -vv --cert cert.crt --key cert.key --cacert rootca.crt https://my-secure-endpoint.com
+</textarea>
+<p>Form and file upload</p>
+<textarea rows="8" cols="100" readonly >
+curl -X POST https://portal-api-sit.milfordasset.com/mtc/updateMTCSource -F 'file=@MREPORT_14_May_2025 _36_clean.csv' -F "endDate=20 May 2025" -H "Authorization: Bearer wUj...THN5N"  -vv
+
+#or form data
+-H "Content-Type: application/x-www-form-urlencoded" 
+-d "key1=value1&key2=value2"
+</textarea>
+
+  <h3> == Certificate management ==</h3>
+  <textarea rows="6" cols="100" readonly>
+#Generation
+openssl genrsa -aes256 -out rootca.key 4096
+openssl req -x509 -new -nodes -key rootca.key -sha256 -days 1826 -out rootca.crt
+openssl req -new -nodes -out cert.csr -newkey rsa:4096 -keyout cert.key
+(create cert.v3.ext file with content: basicConstraints=CA:FALSE)
+openssl x509 -req -in cert.csr -CA rootca.crt -CAkey rootca.key -CAcreateserial -out cert.crt -days 730 -sha256 -extfile ./cert.v3.ext
+
+#Conversion
+openssl pkcs12 -export -out certificate.pfx -inkey priv.pem -in pub.pem    
+  </textarea>
+
+  <h3> == Docker == </h3>
+  <p>Make sure Docker Desktop is running</p>
+  <p>Working with repositories and images</p>
+  <textarea rows="6" cols="100" readonly>
+docker image history --no-trunc &lt;image_name&gt;
+docker run -p 3001:3000 -p 23:22
+docker run -it -p 7100-7120:7100-7120/tcp 
+
+az login
+az acr login --name iotIrinaTheta  // name of the repo
+docker tag doco-express iotirinatheta.azurecr.io/doco-express
+
+docker pull mcr.microsoft.com/mcr/hello-world
+docker tag mcr.microsoft.com/mcr/hello-world iotirinatheta.azurecr.io/samples/hello-world
+  </textarea>
+
+  <p>Building and running images</p>
+  <textarea rows="6" cols="100" readonly>
+A) docker build --tag docker-gs-ping .
+B) docker build -t docker-gs-ping:multistage -f Dockerfile.multistage . 
+C) docker build -t doco-express -f Dockerfile.multistage --platform linux/amd64 .
+
+docker run --publish 8080:8080 35311350aa75
+
+docker run -p 3001:3000 -p 23:22
+docker run -it -p 7100-7120:7100-7120/tcp   
+  </textarea>
+
+  <p>Troubleshooting</p>
+  <p> Note, a docker container exits when its main process finishes. Need to either leave something running in the foreground or use a process manager such as <code>runit</code> or <code>supervisord</code> to run the processes.</p>
+  <textarea rows="4" cols="100" readonly>
+docker run -dit ubuntu
+# After it, checked for the processes running using:
+docker ps -a
+# For attaching again the container
+docker attach CONTAINER_NAME
+# TIP: For exiting without stopping the container type: ^P^Q    
+  </textarea>
+
+  <h3> == Development odds == </h3>
+  <textarea rows="6" cols="100" readonly>
+redocly build-docs FundsAPI-v0.9.5.yml
+
+brew install mongodb-community@8.0
+brew services restart mongodb/brew/mongodb-community
+brew services list</textarea>
+
+  <h3> == Python ==</h3>
+  <p>Run mkdocs in virtual environment</p>
+
+  <textarea rows="10" cols="100" readonly>
+# create virtual environment
+python3 -m venv /Users/irina/.venv/mkdocs
+OR
+python3 -m venv ~/.venv/mkdocs
+
+#activate
+source ~/.venv/mkdocs/bin/activate
+
+#install packages
+pip3 install -r requirements-docs.txt
+
+
+# while in the project folder
+mkdocs serve
+</textarea>
+
+</section>
+
+<!-- Azure START-->
+<section>
+  <h2>
+    Azure
+  </h2>
+
+  <h3> == Landing zones ==</h3>
+
+  <p> An Azure landing zone uses subscriptions to isolate and scale application resources and platform resources. Subscriptions for application resources are called application landing zones, and subscriptions for platform resources are called platform landing zones.
+  </p>
+  <p> 
+    Use subscriptions as units of management, support a subscription with a suitable Management Group hierarchy. 
+  </p>
+  <p> Principles</p>
+
+  <ul>
+    <li>Subscription democratization</li>
+    <li>Policy-driven governance</li>
+    <li>Single control and management plane</li>
+    <li>Application-centric service model</li>
+    <li>Alignment with Azure-native design and roadmaps</li>
+  </ul>
+
+  <h3> == Functions ==</h3>
+  <p>
+    Steps 1 First, create resource group 'rg-mam-poc' and Function App (Cons, non-flex) mam-onboarding-poc
+  </p>
+
+  <p>Steps 2. </p>
+
+<textarea rows="4" cols="100" readonly>cd backend
+dotnet publish *.csproj --output ./wwwroot
+ZIP THE CONTENT OF wwwroot (without the wwwroot folder)
+az functionapp deployment source config-zip -g rg-mam-poc -n mam-onboarding-poc --src wwwroot.zip</textarea>
+
+  
+<p>
+Step 3. Add CORS * and make sure to remove any other urls from the list
+</p>
+<p>
+Step 4. Add roles to the managed identity created during first steps
+  <ul>
+    <li>Storage Queue Data Contributor</li>
+    <li>Storage Blob Data Contributor</li>
+    <li>Storage Table Data Contributor</li>
+  </ul>
+</p>
+
+<p>
+Step 5. In the settings add new env variable <code>AzureWebJobsStorage__accountName = rgmampocb099</code>
+</p>
+
+  <h3> == Powershell commands ==</h3>
+  <p>
+    Powershell app gateway START/STOP commands
+  </p>
+
+  <textarea rows="4" cols="100" readonly>
+set-azcontext -Subscription fc5aa191-0547-4278-9426-49dbf32ab470
+$AppGw = Get-AzApplicationGateway -Name ag-sq-testapis -ResourceGroupName sq-testapis_group
+Start-AzApplicationGateway -ApplicationGateway $AppGw
+</textarea>
+
+  <p>
+  powershell to have different subscription in different terminals
+  </p>
+
+<textarea rows="2" cols="80" readonly>$Env:AZURE_CONFIG_DIR = "$env:USERPROFILE\.NAME OF PROFILE"</textarea>
+
+</section>
+<!-- Azure END-->
+
+
+<section>
+  
+
+<section>
+  
+  <h2> HTML examples </h2>
+  <h3> == Formatting ==</h3>
+  <p>
+    <em>*<sup>P</sup>i<sup>c</sup><sub>k</sub> l<sub>e</sub><sup>s</sup><sub>!</sub>*</em>
+  </p>
+
+  <ul>
+    <li><b>Bold text</b>? Check.</li>
+    <li><u>Underlined text</u>. Got it.</li>
+    <li><s>Strike fucking through</s>? <mark>Highlighted text</mark>? <em>Emphasized text</em>?</li>
+    <li>Check &check;, check &check;, and ~holy shit~ check again. HTML's been doing this while you were still drooling
+      over React.</li>
+  </ul>
+
+  <p>
+    Abbreviations? <abbr title="Hyper Mother Fucking Text">HTML</abbr> hover.
+  </p>
+
+  <h3> == Interactive == </h3>
+  <details>
+    <summary>Expandable section</summary>
+    <p>Do you like it? 👻</p>
+  </details>
+
+  <p> Popover? </p>
+  <button popovertarget="my-popover">Open it, coward</button>
+  <div popover id="my-popover">Didn't even know HTML could do this, huh?</div>
+
+
+  <p> Dialogs? </p>
+  <dialog id="myDialog">
+    <p>Hello, you legend</p>
+    <button onclick="myDialog.close()">Close this beauty</button>
+  </dialog>
+  <button onclick="myDialog.showModal()">Open the damn dialog</button>
+</section>
+
+<section>
+  <h2>Forms that work on every Casio calculator</h2>
+
+  <form action="/submit" method="post">
+    <fieldset>
+      <legend>Prepare to be underwhelmed, asshole</legend>
+
+      <label for="text-input">Text input:</label>
+      <input type="text" id="text-input" name="text-input" placeholder="Type something, genius" pattern="[A-Za-z]+"
+        title="Letters only" required>
+      <br>
+
+      <label for="email-input">Email input for spam:</label>
+      <input type="email" id="email-input" name="email-input" placeholder="spam@justhtml.com" required>
+      <br>
+
+      <label for="password-input">Password you'll forget in 5 minutes (8-20 characters):</label>
+      <input type="password" id="password-input" name="password-input" minlength="8" maxlength="20" required>
+      <br>
+
+      <label for="number-input">Pick a number between 0 and 100:</label>
+      <input type="number" id="number-input" name="number-input" min="0" max="100" step="1">
+      <br>
+
+      <label for="range-input">Slide this to show how much you love HTML (0 to 100%):</label>
+      <input type="range" id="range-input" name="range-input" min="0" max="100">
+      <br>
+
+      <label for="date-input">Choose a date for your inevitable meltdown:</label>
+      <input type="date" id="date-input" name="date-input">
+      <br>
+
+      <label for="time-input">Set a time for your daily existential crisis:</label>
+      <input type="time" id="time-input" name="time-input">
+      <br>
+
+      <label for="datetime-local-input">Pick a date and time for your next panic error:</label>
+      <input type="datetime-local" id="datetime-local-input" name="datetime-local-input">
+      <br>
+
+      <label for="month-input">Select a month for your quarterly breakdown:</label>
+      <input type="month" id="month-input" name="month-input">
+      <br>
+
+      <label for="week-input">Choose a week to question all your life choices:</label>
+      <input type="week" id="week-input" name="week-input">
+      <br>
+
+      <label for="color-input">Pick a color that matches your soul (hint: it's probably gray):</label>
+      <input type="color" id="color-input" name="color-input">
+      <br>
+
+      <label for="file-input">Upload a file you'll never find again (PDF only):</label>
+      <input type="file" id="file-input" name="file-input" accept=".pdf" multiple>
+      <br>
+
+      <label>
+        <input type="checkbox" name="checkbox" value="1">
+        Check this if you're a robot (we won't tell, you soulless fuck)
+      </label>
+      <br>
+
+      <label>
+        <input type="radio" name="radio-group" value="option1">
+        Pick your poison: Option 1
+      </label>
+      <br>
+
+      <label>
+        <input type="radio" name="radio-group" value="option2">
+        Pick your poison: Option 2
+      </label>
+      <br>
+
+      <label for="select-input">Choose your favorite way to waste time:</label>
+      <select name="select-input" id="select-input">
+        <optgroup label="Productive Wasting">
+          <option value="1">Organizing your desk for the 10th time</option>
+          <option value="2">Cleaning your inbox (lol, good luck)</option>
+        </optgroup>
+        <optgroup label="Unproductive Wasting">
+          <option value="3">Watching cat videos</option>
+          <option value="4">Staring at the wall</option>
+        </optgroup>
+      </select>
+      <br>
+
+      <label for="textarea">Pour your heart out here, or just bitch about frameworks:</label>
+      <textarea name="textarea" id="textarea" rows="4" cols="40"
+        placeholder="Go on, vent your pathetic frustrations"></textarea>
+      <br>
+
+      <label for="browser-input">Admit which browser you use:</label>
+      <input type="text" id="browser-input" list="browsers">
+      <datalist id="browsers">
+        <option value="Chrome">
+        <option value="Firefox">
+        <option value="Safari">
+        <option value="Brave"></option>
+        <option value="Internet Explorer (seriously, wtf?)">
+      </datalist>
+      <br>
+
+      <label for="meter">Your current level of hydration:</label>
+      <meter id="meter" value="0.6">60% (barely)</meter>
+      <br>
+
+      <label for="progress">How close you are to rage-quitting this form:</label>
+      <progress id="progress" value="70" max="100">70% (almost there)</progress>
+      <br>
+    </fieldset>
+
+    <button type="submit">Submit (to your fate)</button>
+    <button type="reset">Reset (your expectations, not that they were high)</button>
+  </form>
+
+  <p>
+    <small>
+      *This form is powered real, raw HTML. No frameworks were harmed, because
+      they're useless anyway.*
+    </small>
+  </p>
+
+</section>
+
+<hr>
+
+
+<section>
+  <h2>HTML lends crutches to your JS</h2>
+  <span hidden id="i_am_doofus">
+    Yes you are!
+  </span>
+
+  <p>
+    Now go try something, open the console and type "i_am_doofus".
+  </p>
+
+</section>
+
+<section>
+  <h2>Words of wisdom</h2>
+
+  <blockquote cite="https://justfuckingusehtml.com">
+    <p>
+      It's the kind of page that makes you want to weep tears of joy and throw
+      your overpriced JavaScript framework out the window. It's the kind of page
+      that makes you want to quit your job and become a full-time HTML
+      evangelist. It's the kind of page that makes you want to start a cult
+      dedicated to the worship of HTML. It's the kind of page that makes you
+      want to write a love letter to HTML and send it to the HTML gods. It's the
+      kind of page that makes you want to build a shrine to HTML in your living
+      room and invite all your friends over for a candlelit HTML worship
+      session. It's the kind of page that makes you want to start a YouTube
+      channel dedicated to HTML tutorials and rants. It's the kind of page that
+      makes you want to write a book about HTML and self-publish it on Amazon.
+      It's the kind of page that makes you want to start a TikTok account
+      dedicated to HTML and post daily HTML dance videos. It's the kind of page
+      that makes you want to start a LinkedIn account dedicated to HTML and
+      connect with other HTML professionals.
+    </p>
+  </blockquote>
+  <p>— <cite>Just Use HTML</cite></p>
+</section>
+
+<footer>
+  <hr>
+  <p>
+    <small>
+      © Last updated: January 2026.
+    </small>
+  </p>
+</footer>
+</body>
+</html>
+
