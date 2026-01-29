@@ -47,7 +47,9 @@
   <p>Rewrite origin</p>  
   <textarea rows="2" cols="100" readonly>
 curl -v -H "Host: ectoplasmic.doco-express.com" -k https://13.107.246.31
-  </textarea>  
+  </textarea>
+  <p> with SNI </p>
+  <textarea>curl -vik --resolve api-dev.example.com:443:4.237.184.5 https://api-dev.example.com/myapi/v1/status </textarea>
   <p> Client TLS authentication </p>
 <textarea rows="2" cols="100" readonly>
 curl -vv --cert cert.crt --key cert.key --cacert rootca.crt https://my-secure-endpoint.com
